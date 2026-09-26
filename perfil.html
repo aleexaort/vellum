@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil - Vellum</title>
+    <link href="https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@800,700,500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body class="profile-page">
+
+    <!-- Navbar -->
+    <nav class="library-nav">
+        <div class="nav-container">
+            <a href="index.html" class="logo" style="text-decoration: none; color: inherit;">vellum</a>
+            <ul class="nav-links">
+                <li><a href="index.html">Explorar</a></li>
+                <li><a href="perfil.html" class="active">Mi Perfil</a></li>
+                <li><a href="#">Clubes</a></li>
+                <li><a href="#">Biblioteca</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Info del perfil -->
+    <header class="profile-header">
+        <div class="profile-avatar-container">
+            <div class="avatar-circle">L</div>
+        </div>
+        <h1>Lexa</h1>
+        <p class="profile-bio">"La lectura es un espectro y devorar audiolibros es mi forma de fingir que no estoy en el peor extremo."</p>
+        
+        <div class="profile-tabs">
+            <button class="tab-btn active">Estadísticas</button>
+            <button class="tab-btn">Listas</button>
+            <button class="tab-btn">Clubes</button>
+            <button class="tab-btn">Reseñas</button>
+        </div>
+    </header>
+
+    <!-- Contenido random -->
+    <main class="main-content">
+        <div class="library-room">
+            
+            <section class="bookshelf-unit">
+                <div class="shelf-header">
+                    <h2>Lecturas Actuales</h2>
+                    <span class="shelf-subtitle">Libros variados en proceso</span>
+                </div>
+                <div class="books-grid" id="profile-reading">
+                    <p class="loading-state">Cargando...</p>
+                </div>
+            </section>
+
+            <section class="bookshelf-unit">
+                <div class="shelf-header">
+                    <h2>Favoritos de la Colección</h2>
+                    <span class="shelf-subtitle">Obras que me encantan</span>
+                </div>
+                <div class="books-grid" id="profile-favorites">
+                    <p class="loading-state">Cargando...</p>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <!-- Modal del perfil -->
+    <div id="bookModal" class="modal-overlay">
+        <div class="modal-container">
+            <button id="closeModal" class="close-modal">&times;</button>
+            <div class="modal-content-grid">
+                <img id="modalCover" src="" alt="Portada del libro">
+                <div class="modal-details">
+                    <h3 id="modalTitle">Título del libro</h3>
+                    <p class="modal-author" id="modalAuthor">Autor</p>
+                    <p class="modal-meta-info" id="modalYear">Año: --</p>
+                    <p class="modal-meta-info" id="modalPages">Páginas promedio: --</p>
+                    <p class="modal-meta-info" id="modalPublishers">Editorial: --</p>
+                    <p class="modal-desc" id="modalDesc">Cargando detalles...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Vellum Library Experience.</p>
+    </footer>
+
+    <script>
+        const modalOverlay = document.getElementById('bookModal');
+        const closeModal = document.getElementById('closeModal');
+        const modalCover = document.getElementById('modalCover');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalAuthor = document.getElementById('modalAuthor');
+        const modalYear = document.getElementById('modalYear');
+        const modalPages = document.getElementById('modalPages');
+        const modalPublishers = document.getElementById('modalPublishers');
+        const modalDesc = document.getElementById('modalDesc');
+
+        // Libros random
+        const fetchRandomProfileBooks = async (containerId) => {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+
+            const queryPool = ['science fiction', 'adventure', 'romance', 'space opera', 'fantasy journey'];
+            const randomQuery = queryPool[Math.floor(Math.random() * queryPool.length)];
+
+            try {
+                const response = await axios.get(`https://openlibrary.org/search.json?q=${encodeURIComponent(randomQuery)}&limit=4`);
+                const books = response.data.docs;
+                container.innerHTML = '';
+                
+                books.forEach(book => {
+                    const title = book.title || 'Título';
+                    const author = book.author_name ? book.author_name[0] : 'Autor';
+                    const year = book.first_publish_year || 'No especificado';
+                    const pageCount = book.number_of_pages_median || 'No especificado';
+                    const publisher = book.publisher ? book.publisher[0] : 'Independiente';
+                    const coverId = book.cover_i;
+                    
+                    const coverUrl = coverId ? `https://covers.openlibrary.org/b/id/${coverId}-M.jpg` : 'https://images.unsplash.com/photo-1543002588-bfa74002ed7e?auto=format&fit=crop&w=300&q=80';
+                    
+                    const card = document.createElement('div');
+                    card.className = 'book-card';
+                    card.innerHTML = `
+                        <div class="book-cover-wrapper"><img src="${coverUrl}" alt="${title}" loading="lazy"></div>
+                        <div class="book-meta">
+                            <span class="book-title">${title}</span>
+                            <span class="book-author">${author}</span>
+                        </div>
+                    `;
+
+                    card.addEventListener('click', () => {
+                        modalCover.src = coverUrl;
+                        modalTitle.textContent = title;
+                        modalAuthor.textContent = `Autor: ${author}`;
+                        modalYear.textContent = `📅 Año de primera publicación: ${year}`;
+                        modalPages.textContent = `📖 Promedio de páginas: ${pageCount}`;
+                        modalPublishers.textContent = `🏛️ Editorial principal: ${publisher}`;
+                        modalDesc.textContent = `"${title}" escrito por ${author}, publicado inicialmente alrededor de ${year}. Editado por ${publisher}.`;
+                        modalOverlay.style.display = 'flex';
+                    });
+
+                    container.appendChild(card);
+                });
+            } catch (err) {
+                container.innerHTML = '<p class="error-state">No se pudieron cargar los libros.</p>';
+            }
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchRandomProfileBooks('profile-reading');
+            fetchRandomProfileBooks('profile-favorites');
+        });
+
+        closeModal.addEventListener('click', () => {
+            modalOverlay.style.display = 'none';
+        });
+
+        window.addEventListener('click', (e) => {
+            if (e.target === modalOverlay) {
+                modalOverlay.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>

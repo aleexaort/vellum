@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vellum - Biblioteca Inmersiva</title>
+    <!-- Tipografías de diseño -->
+    <link href="https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@800,700,500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <!-- Axios -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body>
+
+    <!-- Barra de navegación principal -->
+    <nav class="library-nav">
+        <div class="nav-container">
+            <a href="index.html" class="logo" style="text-decoration: none; color: inherit;">vellum</a>
+            <ul class="nav-links">
+                <li><a href="index.html" class="active">Explorar</a></li>
+                <li><a href="perfil.html">Mi Perfil</a></li>
+                <li><a href="#">Clubes</a></li>
+                <li><a href="#">Biblioteca</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Sección de inicio -->
+    <header class="hero">
+        <div class="hero-container">
+            <span class="badge">Colecciones Seleccionadas</span>
+            <h1>Lee los libros de los que todos están hablando</h1>
+            <p>Explora estantes temáticos interactivos, descubre historias fascinantes y consulta metadatos en tiempo real.</p>
+            
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Busca por título o autor general...">
+                <button id="searchBtn">Buscar</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Contenedor general -->
+    <main class="main-content">
+        <div class="library-room">
+            
+            <!-- Resultados de búsqueda -->
+            <section class="bookshelf-unit search-results-section" id="searchResultsSection" style="display: none;">
+                <div class="shelf-header">
+                    <h2 id="searchResultsTitle">Resultados de Búsqueda</h2>
+                    <span class="shelf-subtitle">Ejemplares encontrados según tu consulta</span>
+                </div>
+                <div class="books-grid" id="shelf-search"></div>
+            </section>
+
+            <!-- Estante 1 -->
+            <section class="bookshelf-unit">
+                <div class="shelf-header">
+                    <h2>Romances Contemporáneos</h2>
+                    <span class="shelf-subtitle">Lo más popular en historias de amor y conexiones entrañables</span>
+                </div>
+                <div class="books-grid" id="shelf-romance">
+                    <p class="loading-state">Cargando estante...</p>
+                </div>
+            </section>
+
+            <!-- Estante 2 -->
+            <section class="bookshelf-unit">
+                <div class="shelf-header">
+                    <h2>Favoritos de los Clubes de Lectura</h2>
+                    <span class="shelf-subtitle">Selecciones recomendadas por comunidades lectoras activas</span>
+                </div>
+                <div class="books-grid" id="shelf-bestsellers">
+                    <p class="loading-state">Cargando estante...</p>
+                </div>
+            </section>
+
+            <!-- Estante 3 -->
+            <section class="bookshelf-unit">
+                <div class="shelf-header">
+                    <h2>Obsesiones Nocturnas</h2>
+                    <span class="shelf-subtitle">Misterios, suspenso y thrillers atrapantes para desvelarse</span>
+                </div>
+                <div class="books-grid" id="shelf-thriller">
+                    <p class="loading-state">Cargando estante...</p>
+                </div>
+            </section>
+
+            <!-- Estante 4 -->
+            <section class="bookshelf-unit">
+                <div class="shelf-header">
+                    <h2>Fantasía y Mundos Lejanos</h2>
+                    <span class="shelf-subtitle">Aventuras épicas y universos mágicos extraordinarios</span>
+                </div>
+                <div class="books-grid" id="shelf-fantasy">
+                    <p class="loading-state">Cargando estante...</p>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <!-- Modal para ver detalles -->
+    <div id="bookModal" class="modal-overlay">
+        <div class="modal-container">
+            <button id="closeModal" class="close-modal">&times;</button>
+            <div class="modal-content-grid">
+                <img id="modalCover" src="" alt="Portada del libro">
+                <div class="modal-details">
+                    <h3 id="modalTitle">Título del libro</h3>
+                    <p class="modal-author" id="modalAuthor">Autor</p>
+                    <p class="modal-meta-info" id="modalYear">Año: --</p>
+                    <p class="modal-meta-info" id="modalPages">Páginas promedio: --</p>
+                    <p class="modal-meta-info" id="modalPublishers">Editorial: --</p>
+                    <p class="modal-desc" id="modalDesc">Cargando detalles...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Vellum Library Experience. Hecho con amor y diseño web.</p>
+    </footer>
+
+    <script src="js/main.js"></script>
+</body>
+</html>
